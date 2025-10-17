@@ -26,11 +26,10 @@ import p12 from '../assets/p12.jpg';
 import Dom from '../assets/Dom.png';
 import ogrod from '../assets/ogrod.png';
 import zdj1 from '../assets/zdj1.jpeg';
-import zdj2 from '../assets/zdj2.jpg';
+// import zdj2 from '../assets/zdj2.jpg';
 import domki from '../assets/domki.png';
-import domek1 from '../assets/domek1.png';
+// import domek1 from '../assets/domek1.png';
 
-// KROK 1: Dodanie 'id' do interfejsu
 interface GalleryProps {
   language: 'pl' | 'de';
   id?: string;
@@ -38,11 +37,17 @@ interface GalleryProps {
 
 type FilterType = 'all' | 'interiors' | 'garden' | 'team';
 
-// KROK 2: Przyjęcie 'id' jako prop
+const INITIAL_IMAGE_COUNT = 9; // Liczba zdjęć widocznych na starcie
+
 export default function Gallery({ language, id }: GalleryProps) {
-  // POPRAWKA: Zmieniamy stan na przechowywanie indeksu obrazka
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  
+  // === NOWOŚĆ: Stan do obsługi "Pokaż więcej" ===
+  const [visibleCount, setVisibleCount] = useState(INITIAL_IMAGE_COUNT);
+  
+  // === NOWOŚĆ: Stan do obsługi swipe na mobile ===
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const filters = language === 'pl'
     ? [
@@ -58,7 +63,6 @@ export default function Gallery({ language, id }: GalleryProps) {
         { id: 'team' as FilterType, label: 'UNSER TEAM' },
       ];
 
-  // POPRAWKA: Nowa, rozbudowana lista zdjęć z alt textami
   const allImages = [
     { url: Dom, category: 'garden', alt: 'Elegancka, biała willa Rezydencji Rubin z podjazdem.' },
     { url: p1, category: 'interiors', alt: 'Przestronny pokój dwuosobowy z drewnianymi meblami.' },
@@ -69,7 +73,7 @@ export default function Gallery({ language, id }: GalleryProps) {
     { url: fot2, category: 'team', alt: 'Uśmiechnięta pielęgniarka, członkini naszego zespołu.' },
     { url: p4, category: 'interiors', alt: 'Pokój jednoosobowy z biurkiem i widokiem na zieleń.' },
     { url: zdj1, category: 'interiors', alt: 'Bezpieczna łazienka z uchwytami i bez barier.' },
-    { url: domek1, category: 'garden', alt: 'Urokliwy domek na terenie rezydencji.' },
+    // { url: domek1, category: 'garden', alt: 'Urokliwy domek na terenie rezydencji.' },
     { url: p5, category: 'interiors', alt: 'Przytulny kącik do czytania w jednym z pokoi.' },
     { url: fot3, category: 'team', alt: 'Doświadczony rehabilitant z naszego zespołu.' },
     { url: p6, category: 'interiors', alt: 'Eleganckie meble i staranne wykończenie pokoju.' },
@@ -88,7 +92,9 @@ export default function Gallery({ language, id }: GalleryProps) {
     ? allImages
     : allImages.filter((img) => img.category === activeFilter);
   
-  // === LOGIKA NAWIGACJI W LIGHTBOXIE ===
+  // === NOWOŚĆ: Tworzymy listę zdjęć do wyświetlenia na podstawie limitu ===
+  const imagesToShow = filteredImages.slice(0, visibleCount);
+
   const showNextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     if (lightboxIndex !== null) {
@@ -103,7 +109,6 @@ export default function Gallery({ language, id }: GalleryProps) {
     }
   };
 
-  // Obsługa klawiatury dla lightboxa
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (lightboxIndex === null) return;
@@ -114,6 +119,25 @@ export default function Gallery({ language, id }: GalleryProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIndex]);
+
+  // === NOWOŚĆ: Logika do obsługi swipe na mobile ===
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+  };
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const diff = touchStart - touchEnd;
+    const swipeThreshold = 50; // Minimalna odległość przesunięcia palcem
+  
+    if (diff > swipeThreshold) {
+      showNextImage(); // Swipe w lewo
+    } else if (diff < -swipeThreshold) {
+      showPrevImage(); // Swipe w prawo
+    }
+    setTouchStart(null);
+  };
 
   return (
     <section id={id} className="py-24 bg-stone-50">
@@ -126,7 +150,10 @@ export default function Gallery({ language, id }: GalleryProps) {
           {filters.map((filter) => (
             <button
               key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
+              onClick={() => {
+                setActiveFilter(filter.id);
+                setVisibleCount(INITIAL_IMAGE_COUNT); // Resetuj widok po zmianie filtra
+              }}
               className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
                 activeFilter === filter.id
                   ? 'bg-amber-700 text-white shadow-lg'
@@ -138,10 +165,11 @@ export default function Gallery({ language, id }: GalleryProps) {
           ))}
         </div>
 
+        {/* POPRAWKA: Mapujemy teraz po `imagesToShow` */}
         <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-          {filteredImages.map((image, index) => (
+          {imagesToShow.map((image, index) => (
             <div
-              key={index}
+              key={`${image.url}-${index}`}
               className="break-inside-avoid cursor-pointer group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
               onClick={() => setLightboxIndex(index)}
             >
@@ -155,28 +183,32 @@ export default function Gallery({ language, id }: GalleryProps) {
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <button
-            className="inline-flex items-center justify-center border-2 border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200"
-          >
-            <Camera size={20} className="mr-2" />
-            <span>{language === 'pl' ? 'Zobacz więcej zdjęć' : 'Mehr Fotos ansehen'}</span>
-          </button>
-        </div>
+        {/* === NOWOŚĆ: Przycisk "Pokaż więcej" jest widoczny warunkowo === */}
+        {visibleCount < filteredImages.length && (
+          <div className="text-center mt-16">
+            <button
+              onClick={() => setVisibleCount(allImages.length)}
+              className="inline-flex items-center justify-center border-2 border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white px-8 py-4 rounded-lg font-semibold transition-all duration-200"
+            >
+              <Camera size={20} className="mr-2" />
+              <span>{language === 'pl' ? 'Zobacz więcej zdjęć' : 'Mehr Fotos ansehen'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* === NOWY, ULEPSZONY LIGHTBOX === */}
       {lightboxIndex !== null && (
         <div
           className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setLightboxIndex(null)}
+          // === NOWOŚĆ: Dodajemy eventy dotykowe do lightboxa ===
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          {/* Przycisk Zamknij */}
           <button className="absolute top-4 right-4 text-white hover:text-amber-400 transition-colors z-10">
             <X size={40} />
           </button>
 
-          {/* Strzałka w lewo (tylko desktop) */}
           <button 
             onClick={showPrevImage}
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors hidden lg:block z-10"
@@ -184,7 +216,6 @@ export default function Gallery({ language, id }: GalleryProps) {
             <ChevronLeft size={40} />
           </button>
 
-          {/* Główne zdjęcie */}
           <img
             src={filteredImages[lightboxIndex].url}
             alt={filteredImages[lightboxIndex].alt}
@@ -192,7 +223,6 @@ export default function Gallery({ language, id }: GalleryProps) {
             onClick={(e) => e.stopPropagation()}
           />
           
-          {/* Strzałka w prawo (tylko desktop) */}
           <button 
             onClick={showNextImage}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors hidden lg:block z-10"
