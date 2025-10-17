@@ -21,17 +21,25 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  // Funkcja, która obsługuje całą nawigację
+  // Funkcja, która obsługuje całą nawigację - bez zmian, jest idealna
   const handleNavigate = (sectionId: string) => {
-    // Jeśli jesteśmy na podstronie, najpierw wróć na stronę główną
+    // Jeśli ID to 'hero', po prostu przewiń na samą górę okna
+    if (sectionId === 'hero') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Jeśli jesteśmy w polityce, zamknij ją
+      if (showPrivacy) {
+        setShowPrivacy(false);
+      }
+      return; // Zakończ funkcję
+    }
+
+    // Twoja istniejąca logika dla pozostałych sekcji
     if (showPrivacy) {
       setShowPrivacy(false);
-      // Poczekaj chwilę, aż widok się przełączy i dopiero przewiń
       setTimeout(() => {
         document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } else {
-      // Jeśli jesteśmy na stronie głównej, po prostu przewiń
       document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
@@ -46,23 +54,24 @@ function App() {
 
       <main>
         {showPrivacy ? (
-          // Jeśli `showPrivacy` jest true, pokaż TYLKO treść polityki
           <PrivacyPolicyPage 
             language={language} 
             onNavigateHome={() => setShowPrivacy(false)} 
           />
         ) : (
-          // W przeciwnym razie, pokaż wszystkie sekcje strony głównej
           <>
-            <Hero language={language} />
+            {/* --- POPRAWKA: Dodane ID do sekcji --- */}
+            {/* Teraz nawigacja wie, gdzie ma przewijać */}
+            <Hero id="hero" language={language} />
             <InfoBar language={language} />
-            <WhyUs language={language} />
-            <RubinDifferenceB language={language} />
+            <WhyUs id="why-us" language={language} />
+            <RubinDifferenceB id="offer" language={language} />
             <SocialBar language={language} />
-            <About language={language} />
-            <Gallery language={language} />
+            <About id="about" language={language} />
+            <Gallery id="gallery" language={language} />
             <InfoBar language={language} />
             <Contact 
+              id="contact"
               language={language} 
               onShowPrivacyPolicy={handleShowPrivacy} 
             />

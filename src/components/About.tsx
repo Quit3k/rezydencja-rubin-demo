@@ -1,12 +1,20 @@
-import { useState } from 'react';
 import { Check } from 'lucide-react';
 
+// KROK 1: Importowanie lokalnych zdjęć
+import fot1 from '../assets/fot1.png';
+import fot2 from '../assets/fot2.png';
+import fot3 from '../assets/fot3.png';
+import fot4 from '../assets/fot4.png';
+
+// KROK 2: Dodanie 'id' do interfejsu
 interface AboutProps {
   language: 'pl' | 'de';
+  id?: string;
 }
 
-export default function About({ language }: AboutProps) {
-  const [hoveredMember, setHoveredMember] = useState<number | null>(null);
+// KROK 3: Przyjęcie 'id' jako prop
+export default function About({ language, id }: AboutProps) {
+  // Usunęliśmy state `hoveredMember`, ponieważ nie będzie już potrzebny
 
   const content = language === 'pl' ? {
     sectionTitle: { part1: 'Poznaj nasz ', part2: 'ZESPÓŁ' },
@@ -16,11 +24,12 @@ export default function About({ language }: AboutProps) {
       values: ['Empatia', 'Szacunek', 'Godność'],
       endText: 'Dzięki nim nie jesteśmy placówką, a prawdziwym domem – rodzinną przystanią, gdzie każdy mieszkaniec jest traktowany z najwyższą troską, a jego potrzeby są zawsze na pierwszym miejscu.'
     },
+    // KROK 4: Zaktualizowana tablica 'team'
     team: [
-      { name: 'Dr Anna Kowalska', role: 'Dyrektor Medyczny', image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Marta Nowak', role: 'Kierownik Pielęgniarstwa', image: 'https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Piotr Wiśniewski', role: 'Specjalista Rehabilitacji', image: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Katarzyna Zielińska', role: 'Koordynator Aktywności', image: 'https://images.pexels.com/photos/5407206/pexels-photo-5407206.jpeg?auto=compress&cs=tinysrgb&w=400' },
+      { image: fot1, altText: 'Portret dyrektor medycznej Rezydencji Rubin.' },
+      { image: fot2, altText: 'Portret kierowniczki pielęgniarstwa w Rezydencji Rubin.' },
+      { image: fot3, altText: 'Portret specjalisty od rehabilitacji w Rezydencji Rubin.' },
+      { image: fot4, altText: 'Portret koordynatorki aktywności dla seniorów w Rezydencji Rubin.' },
     ]
   } : {
     sectionTitle: { part1: 'Lernen Sie unser ', part2: 'TEAM', part3: ' kennen' },
@@ -30,16 +39,18 @@ export default function About({ language }: AboutProps) {
       values: ['Empathie', 'Respekt', 'Würde'],
       endText: 'Dank ihnen sind wir keine Einrichtung, sondern ein echtes Zuhause – ein Familienhafen, in dem jeder Bewohner mit größter Sorgfalt behandelt wird und seine Bedürfnisse immer an erster Stelle stehen.'
     },
+    // KROK 4: Zaktualizowana tablica 'team' w drugim języku
     team: [
-      { name: 'Dr. Anna Kowalska', role: 'Medizinische Direktorin', image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Marta Nowak', role: 'Pflegeleitung', image: 'https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Piotr Wiśniewski', role: 'Rehabilitationsspezialist', image: 'https://images.pexels.com/photos/5452293/pexels-photo-5452293.jpeg?auto=compress&cs=tinysrgb&w=400' },
-      { name: 'Katarzyna Zielińska', role: 'Aktivitätskoordinatorin', image: 'https://images.pexels.com/photos/5407206/pexels-photo-5407206.jpeg?auto=compress&cs=tinysrgb&w=400' },
+        { image: fot1, altText: 'Porträt der medizinischen Direktorin der Residenz Rubin.' },
+        { image: fot2, altText: 'Porträt der Pflegeleiterin in der Residenz Rubin.' },
+        { image: fot3, altText: 'Porträt des Rehabilitationsspezialisten in der Residenz Rubin.' },
+        { image: fot4, altText: 'Porträt der Aktivitätskoordinatorin für Senioren in der Residenz Rubin.' },
     ]
   };
 
   return (
-    <section id="about" className="py-24 bg-white">
+    // KROK 5: Użycie 'id' przekazanego z App.tsx
+    <section id={id} className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center mb-20">
           <h2 className="text-4xl lg:text-5xl font-serif font-bold text-slate-800">
@@ -72,29 +83,15 @@ export default function About({ language }: AboutProps) {
 
           <div>
             <div className="grid grid-cols-2 gap-6">
+              {/* KROK 6: Uproszczona pętla renderująca tylko zdjęcia */}
               {content.team.map((member, index) => (
-                <div
-                  key={index}
-                  className="relative group cursor-pointer"
-                  onMouseEnter={() => setHoveredMember(index)}
-                  onMouseLeave={() => setHoveredMember(null)}
-                >
+                <div key={index} className="group">
                   <div className="aspect-square rounded-2xl overflow-hidden shadow-lg">
                     <img
                       src={member.image}
-                      alt={member.name}
+                      alt={member.altText} // Używamy nowego tekstu alternatywnego
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
-                  </div>
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-2xl transition-opacity duration-300 flex items-end p-4 ${
-                      hoveredMember === index ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                    }`}
-                  >
-                    <div className="text-white">
-                      <p className="font-bold text-lg leading-tight">{member.name}</p>
-                      <p className="text-sm text-stone-300">{member.role}</p>
-                    </div>
                   </div>
                 </div>
               ))}

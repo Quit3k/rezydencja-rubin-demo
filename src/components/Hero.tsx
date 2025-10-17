@@ -1,15 +1,17 @@
 import { ArrowRight, Camera } from 'lucide-react';
 import domImage from '../assets/Dom.png';
 
+// KROK 1: Dodajemy opcjonalne 'id' do interfejsu propsów
 interface HeroProps {
   language: 'pl' | 'de';
+  id?: string;
 }
 
-export default function Hero({ language }: HeroProps) {
+// KROK 2: Przyjmujemy 'id' jako prop
+export default function Hero({ language, id }: HeroProps) {
   const content = language === 'pl' ? {
     preheadline: 'REZYDENCJA KLASY PREMIUM DLA SENIORÓW',
     headline: 'Bezpieczeństwo i Całodobowa Opieka. Nowa Definicja Jesieni Życia.',
-    // NOWY NAGŁÓWEK DLA WERSJI MOBILNEJ
     mobileHeadline: 'Dom Opieki Rubin - Bezpieczeństwo i całodobowa opieka.',
     body: 'W Rezydencji Rubin profesjonalna, całodobowa opieka to fundament naszego domu. Łączymy luksusowe warunki z ciepłem rodzinnej atmosfery, aby zapewnić Państwa Bliskim spokój, komfort i poczucie godności każdego dnia. Zaufaj naszemu doświadczeniu.',
     ctaPrimary: 'ODKRYJ NASZĄ OFERTĘ',
@@ -17,7 +19,6 @@ export default function Hero({ language }: HeroProps) {
   } : {
     preheadline: 'Seniorenresidenz der Premiumklasse',
     headline: 'Sicherheit und Rund-um-die-Uhr-Betreuung. Eine neue Definition des Lebensherbstes.',
-    // NOWY NAGŁÓWEK DLA WERSJI MOBILNEJ (po niemiecku)
     mobileHeadline: 'Seniorenresidenz Rubin - Sicherheit und 24-Stunden-Betreuung.',
     body: 'In der Rubin Residenz ist die professionelle Rund-um-die-Uhr-Pflege das Fundament unseres Hauses. Wir verbinden luxuriöse Bedingungen mit der Wärme einer familiären Atmosphäre, um Ihren Liebsten jeden Tag Ruhe, Komfort und ein Gefühl der Würde zu gewährleisten. Vertrauen Sie unserer Erfahrung.',
     ctaPrimary: 'ENTDECKEN SIE UNSER ANGEBOT',
@@ -32,13 +33,9 @@ export default function Hero({ language }: HeroProps) {
   };
 
   return (
-    // Zapewnia odpowiednią wysokość i padding na start
-    <section className="min-h-screen flex items-center pt-20 pb-10 lg:py-20">
+    // KROK 3: Przekazujemy 'id' do głównego elementu sekcji
+    <section id={id} className="min-h-screen flex items-center pt-20 pb-10 lg:py-20">
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-8">
-        {/* ZMIANA LAYOUTU:
-          - Domyślnie (mobile): flex z odwróconą kolumną (zdjęcie będzie pierwsze)
-          - Od `lg` (desktop): wraca do grida z 2 kolumnami
-        */}
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
           {/* KONTENER Z TREŚCIĄ */}
@@ -89,15 +86,11 @@ export default function Hero({ language }: HeroProps) {
           </div>
           
           {/* KONTENER ZE ZDJĘCIEM */}
-          {/* ZMIANA WYSOKOŚCI ZDJĘCIA:
-            - Mobile: 350px
-            - Tablet: 450px
-            - Desktop: 550px
-          */}
           <div className="relative w-full h-[350px] md:h-[450px] lg:h-[550px] rounded-2xl overflow-hidden shadow-2xl">
             <img
               src={domImage}
-              alt="Rezydencja Rubin"
+              // KROK 4: Zaktualizowany tekst alternatywny dla SEO
+              alt="Elegancka, biała willa Rezydencji Rubin z zadbanym podjazdem i ogrodem w Grzybowie"
               className="w-full h-full object-cover"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 md:p-8">

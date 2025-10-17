@@ -9,7 +9,9 @@ interface FooterProps {
 export default function Footer({ language, onNavigate, onShowPrivacyPolicy }: FooterProps) {
   const year = new Date().getFullYear();
 
+  // POPRAWKA: Dodano pole 'brandName' do tłumaczeń
   const content = language === 'pl' ? {
+    brandName: 'Dom Opieki',
     description: { part1: 'Luksusowa rezydencja seniora', part2: 'nad Morzem Bałtyckim.'},
     menuTitle: 'Menu',
     menuItems: ['Oferta', 'Galeria', 'Kontakt'],
@@ -19,6 +21,7 @@ export default function Footer({ language, onNavigate, onShowPrivacyPolicy }: Fo
     copyright: 'Wszystkie prawa zastrzeżone.',
     privacyPolicy: 'Polityka Prywatności'
   } : {
+    brandName: 'Seniorenresidenz', // Tłumaczenie dla "Dom Opieki"
     description: { part1: 'Luxus-Seniorenresidenz', part2: 'an der Ostsee.' },
     menuTitle: 'Menü',
     menuItems: ['Angebot', 'Galerie', 'Kontakt'],
@@ -35,7 +38,8 @@ export default function Footer({ language, onNavigate, onShowPrivacyPolicy }: Fo
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12 text-stone-300">
           
           <div className="text-center lg:text-left">
-            <h3 className="text-xl font-serif font-bold">Rezydencja</h3>
+            {/* POPRAWKA: Użycie przetłumaczonej nazwy */}
+            <h3 className="text-xl font-serif font-bold">{content.brandName}</h3>
             <h3 className="text-3xl font-serif font-bold text-amber-700 mb-4">RUBIN</h3>
             <p className="text-sm">
               {content.description.part1}
@@ -58,7 +62,8 @@ export default function Footer({ language, onNavigate, onShowPrivacyPolicy }: Fo
             <ul className="space-y-2">
               <li>Bluszczowa 9, 78-132 Grzybowo</li>
               <li><a href="tel:+48539701891" className="hover:text-amber-700 transition-colors">+48 539 701 891</a></li>
-              <li><a href="mailto:kontakt@domseniora-grzybowo.pl" className="hover:text-amber-700 transition-colors">kontakt@domseniora-grzybowo.pl</a></li>
+              {/* POPRAWKA: Zaktualizowany adres e-mail */}
+              <li><a href="mailto:kontakt@domopiekirubin.pl" className="hover:text-amber-700 transition-colors">kontakt@domopiekirubin.pl</a></li>
             </ul>
           </div>
 
@@ -79,7 +84,8 @@ export default function Footer({ language, onNavigate, onShowPrivacyPolicy }: Fo
               {content.privacyPolicy}
             </button>
           </p>
-          <p>© {year} Rezydencja Seniora RUBIN. {content.copyright}</p>
+          {/* POPRAWKA: Użycie przetłumaczonej nazwy w copyright */}
+          <p>© {year} {content.brandName} RUBIN. {content.copyright}</p>
         </div>
       </div>
     </footer>

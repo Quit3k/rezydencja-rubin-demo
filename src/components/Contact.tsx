@@ -1,26 +1,25 @@
+import { useForm, ValidationError } from '@formspree/react';
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Waves, Trees, HeartPulse, ShoppingCart } from 'lucide-react';
 
-// Dodajemy brakującą właściwość
 interface ContactProps {
   language: 'pl' | 'de';
+  id?: string;
   onShowPrivacyPolicy: () => void;
 }
 
-export default function Contact({ language, onShowPrivacyPolicy }: ContactProps) {
-  const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+export default function Contact({ language, id, onShowPrivacyPolicy }: ContactProps) {
+  const [state, handleSubmitFormspree] = useForm("xldpalzj");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const content = language === 'pl' ? {
     headline: 'Porozmawiajmy o przyszłości Twoich bliskich.',
     form: {
-      name: 'Imię i nazwisko',
-      phone: 'Telefon',
-      message: 'Twoja wiadomość',
+      name: 'Imię i nazwisko', phone: 'Telefon', message: 'Twoja wiadomość',
       privacy: { part1: 'Akceptuję ', part2: 'Politykę Prywatności' },
       submit: 'WYŚLIJ WIADOMOŚĆ',
       success: 'Dziękujemy! Wkrótce się z Tobą skontaktujemy.',
+      privacyAlert: 'Musisz zaakceptować politykę prywatności.',
     },
     contact: {
       address: 'Adres', phone: 'Telefon', email: 'Email', hours: 'Godziny otwarcia biura',
@@ -42,38 +41,37 @@ export default function Contact({ language, onShowPrivacyPolicy }: ContactProps)
       privacy: { part1: 'Ich akzeptiere die ', part2: 'Datenschutzrichtlinie' },
       submit: 'NACHRICHT SENDEN',
       success: 'Vielen Dank! Wir werden uns bald bei Ihnen melden.',
+      privacyAlert: 'Sie müssen die Datenschutzrichtlinie akzeptieren.',
     },
     contact: {
       address: 'Adresse', phone: 'Telefon', email: 'Email', hours: 'Bürozeiten',
       hoursValue: 'Montag - Freitag, 8:00 - 20:00', directions: 'ROUTE PLANEN',
     },
     location: {
-        title: 'Abseits vom Trubel, nah am Meer.',
-        features: [
-          { icon: Waves, title: '800m zum Strand', description: 'Tägliche Spaziergänge und Meeresbrise' },
-          { icon: Trees, title: 'Küstenpark', description: 'Ruhe und grüne Umgebung' },
-          { icon: HeartPulse, title: 'Ärztliche Versorgung', description: 'Klinik in der Nähe' },
-          { icon: ShoppingCart, title: 'Lokale Dienstleistungen', description: 'Geschäfte und Apotheke' },
-        ]
+      title: 'Abseits vom Trubel, nah am Meer.',
+      features: [
+        { icon: Waves, title: '800m zum Strand', description: 'Tägliche Spaziergänge und Meeresbrise' },
+        { icon: Trees, title: 'Küstenpark', description: 'Ruhe und grüne Umgebung' },
+        { icon: HeartPulse, title: 'Ärztliche Versorgung', description: 'Klinik in der Nähe' },
+        { icon: ShoppingCart, title: 'Lokale Dienstleistungen', description: 'Geschäfte und Apotheke' },
+      ]
     }
   };
 
   const fullAddress = "Bluszczowa 9, 78-132 Grzybowo";
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
-  const iframeSrc = `https://maps.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed&z=15`;
+  const iframeSrc = `https://www.google.com/maps/embed/v1/place?key=TWOJ_KLUCZ_API_GOOGLE&q=${encodeURIComponent(fullAddress)}`;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // POPRAWKA: Zmieniamy typ 'e' na bardziej precyzyjny
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!privacyAccepted) {
-      alert(language === 'pl' ? 'Musisz zaakceptować politykę prywatności.' : 'Sie müssen die Datenschutzrichtlinie akzeptieren.');
+      alert(content.form.privacyAlert);
       return;
     }
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false); setFormData({ name: '', phone: '', message: '' }); setPrivacyAccepted(false);
-    }, 4000);
+    handleSubmitFormspree(e);
   };
-
+  
   const contactDetails = [
     { icon: MapPin, title: content.contact.address, lines: ["Bluszczowa 9", "78-132 Grzybowo"] },
     { icon: Phone, title: content.contact.phone, lines: ["+48 539 701 891"], href: "tel:+48539701891" },
@@ -82,7 +80,7 @@ export default function Contact({ language, onShowPrivacyPolicy }: ContactProps)
   ];
 
   return (
-    <section id="contact" className="py-24 bg-stone-50">
+    <section id={id} className="py-24 bg-stone-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <h2 className="text-4xl lg:text-5xl font-serif font-bold text-center text-slate-800 mb-16">{content.headline}</h2>
         <div className="grid lg:grid-cols-2 gap-12 items-stretch mb-24">
@@ -106,24 +104,39 @@ export default function Contact({ language, onShowPrivacyPolicy }: ContactProps)
             </a>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex flex-col">
-            {submitted ? (
+            {state.succeeded ? (
               <div className="m-auto text-center"><div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><Send className="text-green-600" size={32} /></div><p className="text-green-800 font-semibold text-lg">{content.form.success}</p></div>
             ) : (
-              <form onSubmit={handleSubmit} className="w-full flex flex-col h-full">
+              <form onSubmit={handleFormSubmit} className="w-full flex flex-col h-full">
                 <div className="space-y-4">
-                  <div><label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">{content.form.name}</label><input id="name" type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors bg-stone-50"/></div>
-                  <div><label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">{content.form.phone}</label><input id="phone" type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors bg-stone-50"/></div>
-                  <div><label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">{content.form.message}</label><textarea id="message" required rows={4} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors resize-none bg-stone-50"/></div>
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">{content.form.name}</label>
+                    <input id="name" type="text" name="name" required className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors bg-stone-50"/>
+                    <ValidationError prefix="Name" field="name" errors={state.errors} className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">{content.form.phone}</label>
+                    <input id="phone" type="tel" name="phone" required className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors bg-stone-50"/>
+                    <ValidationError prefix="Phone" field="phone" errors={state.errors} className="text-red-600 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">{content.form.message}</label>
+                    <textarea id="message" name="message" required rows={4} className="w-full px-4 py-3 border-2 border-stone-200 rounded-lg focus:border-amber-700 focus:outline-none transition-colors resize-none bg-stone-50"/>
+                    <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-600 text-sm mt-1" />
+                  </div>
                 </div>
                 <div className="flex-grow"></div> 
                 <div className="mt-6 space-y-4">
-                    <div className="flex items-center"><input id="privacy" type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="h-4 w-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500" />
-                      <label htmlFor="privacy" className="ml-2 block text-sm text-gray-900">
-                        {content.form.privacy.part1}
-                        <button type="button" onClick={onShowPrivacyPolicy} className="underline hover:text-amber-700">{content.form.privacy.part2}</button>
-                      </label>
-                    </div>
-                    <button type="submit" className="w-full border-2 border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-200"><span>{content.form.submit}</span><Send size={20} /></button>
+                  <div className="flex items-center">
+                    <input id="privacy" type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="h-4 w-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500" />
+                    <label htmlFor="privacy" className="ml-2 block text-sm text-gray-900">
+                      {content.form.privacy.part1}
+                      <button type="button" onClick={onShowPrivacyPolicy} className="underline hover:text-amber-700">{content.form.privacy.part2}</button>
+                    </label>
+                  </div>
+                  <button type="submit" disabled={state.submitting || !privacyAccepted} className="w-full border-2 border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-200 disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500">
+                    <span>{content.form.submit}</span><Send size={20} />
+                  </button>
                 </div>
               </form>
             )}

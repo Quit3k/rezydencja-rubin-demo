@@ -1,150 +1,73 @@
-// import { Phone, Menu, X } from 'lucide-react';
-// import { useState, useEffect } from 'react';
-
-// // Dodajemy 'onNavigate' do propsów
-// interface HeaderProps {
-//   language: 'pl' | 'de';
-//   onLanguageChange: (lang: 'pl' | 'de') => void;
-//   onNavigate: (sectionId: string) => void;
-// }
-
-// export default function Header({ language, onLanguageChange, onNavigate }: HeaderProps) {
-//   const [isScrolled, setIsScrolled] = useState(false);
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-//   useEffect(() => {
-//     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-//     window.addEventListener('scroll', handleScroll);
-//     return () => window.removeEventListener('scroll', handleScroll);
-//   }, []);
-
-//   const navItems = language === 'pl'
-//     ? ['O NAS', 'OFERTA', 'DLACZEGO MY', 'GALERIA', 'KONTAKT']
-//     : ['ÜBER UNS', 'ANGEBOT', 'WARUM WIR', 'GALERIE', 'KONTAKT'];
-  
-//   const navIds = ['about', 'offer', 'why-us', 'gallery', 'contact'];
-
-//   const handleNavClick = (id: string) => {
-//     onNavigate(id);
-//     setIsMenuOpen(false);
-//   };
-
-//   const ctaText = language === 'pl' ? 'ZADZWOŃ' : 'ANRUFEN';
-
-//   return (
-//     <>
-//       <header
-//         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-//           isScrolled ? 'bg-white shadow-lg' : 'bg-white/80 backdrop-blur-sm'
-//         }`}
-//       >
-//         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-//           <div className="flex items-center justify-between h-20">
-//             <div className="flex-shrink-0 cursor-pointer" onClick={() => handleNavClick('hero')}>
-//               <h1 className="text-2xl font-serif font-bold text-slate-800">
-//                 Rezydencja <span className="text-amber-700">RUBIN</span>
-//               </h1>
-//             </div>
-
-//             <nav className="hidden lg:flex items-center space-x-8">
-//               {navItems.map((item, index) => (
-//                 <button
-//                   key={item}
-//                   onClick={() => handleNavClick(navIds[index])}
-//                   className="text-sm font-medium text-slate-700 hover:text-amber-700 transition-colors relative group"
-//                 >
-//                   {item}
-//                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-700 group-hover:w-full transition-all duration-300"></span>
-//                 </button>
-//               ))}
-//             </nav>
-
-//             <div className="hidden lg:flex items-center space-x-4">
-//                <div className="flex items-center space-x-2">
-//                  <button onClick={() => onLanguageChange('pl')} className={`transition-all duration-200 ${language === 'pl' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
-//                    <span className="text-2xl">🇵🇱</span>
-//                  </button>
-//                  <button onClick={() => onLanguageChange('de')} className={`transition-all duration-200 ${language === 'de' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
-//                    <span className="text-2xl">🇩🇪</span>
-//                  </button>
-//                </div>
-//               <a
-//                 href="tel:+48539701891"
-//                 className="bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-//               >
-//                 <Phone size={18} />
-//                 <span>{ctaText}</span>
-//               </a>
-//             </div>
-            
-//             <div className="lg:hidden">
-//               <button onClick={() => setIsMenuOpen(true)} className="p-2 text-slate-800">
-//                 <Menu size={28} />
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </header>
-
-//       {isMenuOpen && (
-//         <div className="fixed inset-0 bg-white z-[100] flex flex-col p-6">
-//           <div className="flex items-center justify-between mb-16">
-//             <h1 className="text-2xl font-serif font-bold text-slate-800">
-//               Rezydencja <span className="text-amber-700">RUBIN</span>
-//             </h1>
-//             <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-800">
-//               <X size={28} />
-//             </button>
-//           </div>
-//           <nav className="flex flex-col items-center justify-center flex-grow space-y-8">
-//             {navItems.map((item, index) => (
-//               <button key={item} onClick={() => handleNavClick(navIds[index])} className="text-3xl font-serif text-slate-800 hover:text-amber-700 transition-colors">
-//                 {item}
-//               </button>
-//             ))}
-//           </nav>
-//         </div>
-//       )}
-//     </>
-//   );
-// }
-
 import { Phone, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import logo from '../assets/logo.png'; // <-- 1. Import loga
+import logo from '../assets/logo.png';
 
-// Dodajemy 'onNavigate' do propsów
+// --- INTERFEJS I STAŁE ---
+// Interfejs propsów bez zmian.
 interface HeaderProps {
   language: 'pl' | 'de';
   onLanguageChange: (lang: 'pl' | 'de') => void;
   onNavigate: (sectionId: string) => void;
 }
 
+// ZMIANA 1: Centralizacja treści i tłumaczeń.
+// Zamiast wielu warunków, mamy jeden obiekt, co ułatwia zarządzanie.
+const content = {
+  pl: {
+    navLinks: [
+      { label: 'DLACZEGO MY', id: 'why-us' },
+      { label: 'OFERTA', id: 'offer' },
+      { label: 'O NAS', id: 'about' },
+      { label: 'GALERIA', id: 'gallery' },
+      { label: 'KONTAKT', id: 'contact' },
+    ],
+    ctaText: 'ZADZWOŃ',
+  },
+  de: {
+    navLinks: [
+      { label: 'WARUM WIR', id: 'why-us' },
+      { label: 'ANGEBOT', id: 'offer' },
+      { label: 'ÜBER UNS', id: 'about' },
+      { label: 'GALERIE', id: 'gallery' },
+      { label: 'KONTAKT', id: 'contact' },
+    ],
+    ctaText: 'ANRUFEN',
+  },
+};
+
+const PHONE_NUMBER = '+48 539 701 891';
+
 export default function Header({ language, onLanguageChange, onNavigate }: HeaderProps) {
+  // --- STATE HOOKS ---
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPhoneVisible, setIsPhoneVisible] = useState(false);
+  
+  const currentContent = content[language]; // Ułatwia dostęp do treści dla wybranego języka
 
+  // --- EFEKTY ---
+  // ZMIANA 2: Usprawniony hook do obsługi scrollowania.
+  // Listener jest teraz dodawany tylko raz, co jest bardziej wydajne.
+  // Logika ukrywania numeru telefonu przy scrollu została zachowana.
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      setIsPhoneVisible(false); // Ukrywa numer telefonu podczas przewijania
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, []); // Pusta tablica zależności sprawia, że efekt uruchamia się tylko raz.
 
-  const navItems = language === 'pl'
-    ? ['O NAS', 'OFERTA', 'DLACZEGO MY', 'GALERIA', 'KONTAKT']
-    : ['ÜBER UNS', 'ANGEBOT', 'WARUM WIR', 'GALERIE', 'KONTAKT'];
-  
-  const navIds = ['about', 'offer', 'why-us', 'gallery', 'contact'];
-
+  // --- HANDLERY ---
+  // Funkcja do nawigacji, która zamyka menu mobilne po kliknięciu.
   const handleNavClick = (id: string) => {
     onNavigate(id);
     setIsMenuOpen(false);
   };
 
-  const ctaText = language === 'pl' ? 'ZADZWOŃ' : 'ANRUFEN';
-
   return (
     <>
+      {/* --- GŁÓWNY NAGŁÓWEK --- */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'bg-white shadow-lg' : 'bg-white/80 backdrop-blur-sm'
@@ -152,71 +75,97 @@ export default function Header({ language, onLanguageChange, onNavigate }: Heade
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* 2. Zastąpienie napisu obrazkiem loga */}
+            {/* Logo, które przewija na górę strony */}
             <div className="flex-shrink-0 cursor-pointer" onClick={() => handleNavClick('hero')}>
               <img src={logo} alt="Logo Rezydencja Rubin" className="h-36 w-auto" />
             </div>
 
+            {/* Nawigacja na desktopie */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item, index) => (
+              {currentContent.navLinks.map((navLink) => (
                 <button
-                  key={item}
-                  onClick={() => handleNavClick(navIds[index])}
+                  key={navLink.id}
+                  onClick={() => handleNavClick(navLink.id)}
                   className="text-sm font-medium text-slate-700 hover:text-amber-700 transition-colors relative group"
                 >
-                  {item}
+                  {navLink.label}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-700 group-hover:w-full transition-all duration-300"></span>
                 </button>
               ))}
             </nav>
 
+            {/* Przyciski po prawej stronie na desktopie (Język i Zadzwoń) */}
             <div className="hidden lg:flex items-center space-x-4">
-               <div className="flex items-center space-x-2">
-                 <button onClick={() => onLanguageChange('pl')} className={`transition-all duration-200 ${language === 'pl' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
-                   <span className="text-2xl">🇵🇱</span>
-                 </button>
-                 <button onClick={() => onLanguageChange('de')} className={`transition-all duration-200 ${language === 'de' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
-                   <span className="text-2xl">🇩🇪</span>
-                 </button>
-               </div>
-              <a
-                href="tel:+48539701891"
-                className="bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-              >
-                <Phone size={18} />
-                <span>{ctaText}</span>
-              </a>
+              <div className="flex items-center space-x-2">
+                <button onClick={() => onLanguageChange('pl')} className={`transition-all duration-200 ${language === 'pl' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
+                  <span className="text-2xl">🇵🇱</span>
+                </button>
+                <button onClick={() => onLanguageChange('de')} className={`transition-all duration-200 ${language === 'de' ? 'opacity-100 scale-110' : 'opacity-50 hover:opacity-75'}`}>
+                  <span className="text-2xl">🇩🇪</span>
+                </button>
+              </div>
+              
+              {/* Logika przycisku "Zadzwoń" na desktopie (bez zmian) */}
+              {isPhoneVisible ? (
+                <button
+                  onClick={() => setIsPhoneVisible(false)}
+                  className="bg-amber-800 text-white px-6 py-3 rounded-lg font-medium text-base tracking-wider"
+                >
+                  {PHONE_NUMBER}
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsPhoneVisible(true)}
+                  className="bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-medium flex items-center space-x-2 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  <Phone size={18} />
+                  <span>{currentContent.ctaText}</span>
+                </button>
+              )}
             </div>
             
-            <div className="lg:hidden">
-              <button onClick={() => setIsMenuOpen(true)} className="p-2 text-slate-800">
-                <Menu size={28} />
-              </button>
+            {/* ZMIANA 3: Nowa sekcja po prawej stronie na mobile (Przełącznik języka i Hamburger) */}
+            <div className="lg:hidden flex items-center space-x-2">
+                <button 
+                  onClick={() => onLanguageChange(language === 'pl' ? 'de' : 'pl')}
+                  className="font-semibold text-slate-700 text-sm border border-slate-300 rounded-md w-12 h-10 transition-colors hover:bg-slate-100"
+                >
+                  {language === 'pl' ? 'DE' : 'PL'}
+                </button>
+                <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-800">
+                  {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
             </div>
           </div>
         </div>
       </header>
-
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[100] flex flex-col p-6">
-          <div className="flex items-center justify-between mb-16">
-            {/* 3. Zastąpienie napisu obrazkiem loga w menu mobilnym */}
-            <div className="cursor-pointer" onClick={() => handleNavClick('hero')}>
-                <img src={logo} alt="Logo Rezydencja Rubin" className="h-36 w-auto" />
-            </div>
-            <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-800">
-              <X size={28} />
-            </button>
-          </div>
-          <nav className="flex flex-col items-center justify-center flex-grow space-y-8">
-            {navItems.map((item, index) => (
-              <button key={item} onClick={() => handleNavClick(navIds[index])} className="text-3xl font-serif text-slate-800 hover:text-amber-700 transition-colors">
-                {item}
-              </button>
+      
+      {/* ZMIANA 4: Nowe, rozwijane menu mobilne zamiast pełnoekranowego. */}
+      {/* Używamy transformacji i opacity do płynnego pojawiania się i znikania. */}
+      <div 
+        className={`fixed top-20 left-0 right-0 z-40 bg-white shadow-lg lg:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+        }`}
+      >
+        <nav className="flex flex-col items-center p-6 space-y-5">
+            {currentContent.navLinks.map((navLink) => (
+                <button 
+                    key={navLink.id} 
+                    onClick={() => handleNavClick(navLink.id)} 
+                    className="text-xl font-medium text-slate-800 hover:text-amber-700 transition-colors w-full pb-2"
+                >
+                    {navLink.label}
+                </button>
             ))}
-          </nav>
-        </div>
-      )}
+            <a
+                href={`tel:${PHONE_NUMBER.replace(/\s/g, '')}`}
+                className="bg-amber-800 hover:bg-amber-900 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center space-x-2 w-full mt-4 transition-colors"
+            >
+                <Phone size={18} />
+                <span>{currentContent.ctaText}</span>
+            </a>
+        </nav>
+      </div>
     </>
   );
 }
