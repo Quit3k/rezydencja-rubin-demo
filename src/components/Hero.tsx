@@ -1,5 +1,5 @@
 import { ArrowRight, Camera } from 'lucide-react';
-import domImage from '../assets/Dom.png';
+import domImage from '../assets/Dom.jpg';
 
 // KROK 1: Dodajemy opcjonalne 'id' do interfejsu propsów
 interface HeroProps {
@@ -96,7 +96,7 @@ export default function Hero({ language, id }: HeroProps) {
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 md:p-8">
               <p className="text-white text-sm font-medium">
                 {language === 'pl'
-                  ? 'Grzybowo, nad Morzem Bałtyckim'
+                  ? 'Dom opieki RUBIN - Grzybowo, nad Morzem Bałtyckim'
                   : 'Grzybowo, an der Ostsee'}
               </p>
             </div>

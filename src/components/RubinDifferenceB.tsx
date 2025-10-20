@@ -1,7 +1,7 @@
 import { Check, Phone } from 'lucide-react';
 
 // Upewnij się, że ten plik istnieje w folderze 'src/assets'
-import miesz1 from '../assets/miesz1.jpg';
+import miesz1 from '../assets/p1.jpg';
 
 interface RubinDifferenceAProps {
   language: 'pl' | 'de';

@@ -23,7 +23,7 @@ import p11 from '../assets/p11.jpg';
 import p12 from '../assets/p12.jpg';
 
 // Istniejące zdjęcia, które zostają
-import Dom from '../assets/Dom.png';
+import Dom from '../assets/Dom1.png';
 import ogrod from '../assets/ogrod.png';
 import zdj1 from '../assets/zdj1.jpeg';
 // import zdj2 from '../assets/zdj2.jpg';
