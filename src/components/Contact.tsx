@@ -1,14 +1,19 @@
 import { useForm, ValidationError } from '@formspree/react';
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Waves, Trees, HeartPulse, ShoppingCart } from 'lucide-react';
+// 1. DODAJEMY IMPORT IKONY DLA ZABLOKOWANEJ MAPY
+import { MapPin, Phone, Mail, Clock, Send, ArrowRight, Waves, Trees, HeartPulse, ShoppingCart, Ban } from 'lucide-react';
 
+// 2. AKTUALIZUJEMY INTERFEJS, ABY PRZYJMOWAĆ STAN ZGODY
 interface ContactProps {
   language: 'pl' | 'de';
   id?: string;
   onShowPrivacyPolicy: () => void;
+  consentStatus: 'pending' | 'accepted' | 'closed';
+  onShowConsent: () => void;
 }
 
-export default function Contact({ language, id, onShowPrivacyPolicy }: ContactProps) {
+// 3. ODBIERAMY NOWE PROPSY
+export default function Contact({ language, id, onShowPrivacyPolicy, consentStatus, onShowConsent }: ContactProps) {
   const [state, handleSubmitFormspree] = useForm("xldpalzj");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
@@ -27,6 +32,12 @@ export default function Contact({ language, id, onShowPrivacyPolicy }: ContactPr
     },
     location: {
       title: 'Z dala od zgiełku, blisko morza.',
+      // 4. DODAJEMY TEKSTY DLA ZABLOKOWANEJ MAPY
+      mapConsent: {
+        title: 'Mapa została zablokowana',
+        description: 'Aby wyświetlić interaktywną mapę Google, musisz wyrazić zgodę na używanie zewnętrznych usług.',
+        button: 'Zarządzaj zgodą'
+      },
       features: [
         { icon: Waves, title: '800m do plaży', description: 'Codzienne spacery i bryza' },
         { icon: Trees, title: 'Nadmorski Park', description: 'Spokój i tereny zielone' },
@@ -49,6 +60,11 @@ export default function Contact({ language, id, onShowPrivacyPolicy }: ContactPr
     },
     location: {
       title: 'Abseits vom Trubel, nah am Meer.',
+      mapConsent: {
+        title: 'Karte blockiert',
+        description: 'Um die interaktive Google Maps-Karte anzuzeigen, müssen Sie der Nutzung externer Dienste zustimmen.',
+        button: 'Zustimmung verwalten'
+      },
       features: [
         { icon: Waves, title: '800m zum Strand', description: 'Tägliche Spaziergänge und Meeresbrise' },
         { icon: Trees, title: 'Küstenpark', description: 'Ruhe und grüne Umgebung' },
@@ -58,11 +74,14 @@ export default function Contact({ language, id, onShowPrivacyPolicy }: ContactPr
     }
   };
 
-  const fullAddress = "Bluszczowa 9, 78-132 Grzybowo";
-  const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
-  const iframeSrc = `https://www.google.com/maps/embed/v1/place?key=TWOJ_KLUCZ_API_GOOGLE&q=${encodeURIComponent(fullAddress)}`;
+  // 5. AKTUALIZUJEMY ADRES
+  const fullAddress = "Bluszczowa 9, 78-100 Grzybowo";
+  // Link do przycisku "PROWADŹ DO NAS" (ten jest OK)
+  const mapLink = `http://googleusercontent.com/maps.google.com/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
 
-  // POPRAWKA: Zmieniamy typ 'e' na bardziej precyzyjny
+  // Link do osadzonej mapy IFRAME (TUTAJ WKLEJ SWÓJ LINK Z GOOGLE MAPS)
+  const iframeSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2336.102772587446!2d15.508404977087974!3d54.16054311349235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470014e10e81ce61%3A0x4911581444fefaf6!2sBluszczowa%209%2C%2078-100%20Grzybowo!5e0!3m2!1sen!2spl!4v1760964563458!5m2!1sen!2spl"; // <--- WKLEJ TUTAJ TEN LINK, KTÓRY ZDOBYŁEŚ
+  
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!privacyAccepted) {
@@ -72,8 +91,9 @@ export default function Contact({ language, id, onShowPrivacyPolicy }: ContactPr
     handleSubmitFormspree(e);
   };
   
+  // 5. AKTUALIZUJEMY ADRES RÓWNIEŻ W DANYCH KONTAKTOWYCH
   const contactDetails = [
-    { icon: MapPin, title: content.contact.address, lines: ["Bluszczowa 9", "78-132 Grzybowo"] },
+    { icon: MapPin, title: content.contact.address, lines: ["Bluszczowa 9", "78-100 Grzybowo"] },
     { icon: Phone, title: content.contact.phone, lines: ["+48 539 701 891"], href: "tel:+48539701891" },
     { icon: Mail, title: content.contact.email, lines: ["kontakt@domseniora-grzybowo.pl"], href: "mailto:kontakt@domseniora-grzybowo.pl" },
     { icon: Clock, title: content.contact.hours, lines: [content.contact.hoursValue] },
@@ -144,7 +164,41 @@ export default function Contact({ language, id, onShowPrivacyPolicy }: ContactPr
         </div>
         <div className="text-center">
           <h3 className="text-3xl font-serif font-bold text-slate-800">{content.location.title}</h3><div className="w-24 h-1 bg-amber-700 mx-auto mt-4 mb-12"></div>
-          <div className="h-[600px] rounded-2xl overflow-hidden shadow-xl mb-12"><iframe src={iframeSrc} width="100%" height="100%" style={{border:0}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Lokalizacja Rezydencji Rubin"></iframe></div>
+          
+          {/* === 6. WDRAŻAMY LOGIKĘ WARUNKOWĄ DLA MAPY === */}
+          <div className="h-[600px] rounded-2xl overflow-hidden shadow-xl mb-12">
+            {consentStatus === 'accepted' ? (
+              // POKAŻ MAPĘ, JEŚLI JEST ZGODA
+              <iframe 
+                src={iframeSrc} 
+                width="100%" 
+                height="100%" 
+                style={{border:0}} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade" 
+                title="Lokalizacja Rezydencji Rubin"
+              ></iframe>
+            ) : (
+              // POKAŻ PLACEHOLDER, JEŚLI NIE MA ZGODY
+              <div className="w-full h-full bg-stone-200 flex flex-col items-center justify-center p-8 text-center">
+                <Ban className="text-stone-500 mb-4" size={48} />
+                <h4 className="text-xl font-bold text-slate-700 mb-2">
+                  {content.location.mapConsent.title}
+                </h4>
+                <p className="text-slate-600 max-w-sm mb-6">
+                  {content.location.mapConsent.description}
+                </p>
+                <button
+                  onClick={onShowConsent}
+                  className="bg-amber-800 hover:bg-amber-900 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200"
+                >
+                  {content.location.mapConsent.button}
+                </button>
+              </div>
+            )}
+          </div>
+          
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {content.location.features.map((feature, index) => (
               <div key={index} className="text-center"><div className="w-16 h-16 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto mb-4"><feature.icon size={32} /></div><h4 className="font-semibold text-slate-800">{feature.title}</h4><p className="text-sm text-slate-600">{feature.description}</p></div>

@@ -22,6 +22,12 @@ import p10 from '../assets/p10.jpg';
 import p11 from '../assets/p11.jpg';
 import p12 from '../assets/p12.jpg';
 
+// === DODANE NOWE ZDJĘCIA OGRODU ===
+import p13 from '../assets/p13.jpg';
+import p15 from '../assets/p15.png';
+import p16 from '../assets/p16.jpg';
+import p17 from '../assets/p17.jpg';
+
 // Istniejące zdjęcia, które zostają
 import Dom from '../assets/Dom1.png';
 import ogrod from '../assets/ogrod.png';
@@ -63,25 +69,31 @@ export default function Gallery({ language, id }: GalleryProps) {
         { id: 'team' as FilterType, label: 'UNSER TEAM' },
       ];
 
+  // === ZMIANA: Dodano nowe zdjęcia (p13, p15, p16, p17) i zmieniono kategorię 'domki' ===
   const allImages = [
     { url: Dom, category: 'garden', alt: 'Elegancka, biała willa Rezydencji Rubin z podjazdem.' },
     { url: p1, category: 'interiors', alt: 'Przestronny pokój dwuosobowy z drewnianymi meblami.' },
     { url: fot1, category: 'team', alt: 'Portret profesjonalnego członka zespołu Rezydencji Rubin.' },
+    { url: p13, category: 'garden', alt: 'Zadbany ogród z alejkami spacerowymi.' }, // Nowe
     { url: p2, category: 'interiors', alt: 'Jasne wnętrze pokoju z wygodnymi łóżkami.' },
     { url: ogrod, category: 'garden', alt: 'Słoneczny taras w ogrodzie, idealny do odpoczynku.' },
     { url: p3, category: 'interiors', alt: 'Nowoczesna łazienka przystosowana dla seniorów.' },
+    { url: p15, category: 'garden', alt: 'Kwitnące rośliny i ławka w ogrodzie rezydencji.' }, // Nowe
     { url: fot2, category: 'team', alt: 'Uśmiechnięta pielęgniarka, członkini naszego zespołu.' },
     { url: p4, category: 'interiors', alt: 'Pokój jednoosobowy z biurkiem i widokiem na zieleń.' },
     { url: zdj1, category: 'interiors', alt: 'Bezpieczna łazienka z uchwytami i bez barier.' },
     // { url: domek1, category: 'garden', alt: 'Urokliwy domek na terenie rezydencji.' },
     { url: p5, category: 'interiors', alt: 'Przytulny kącik do czytania w jednym z pokoi.' },
+    { url: p16, category: 'garden', alt: 'Widok na zielone otoczenie i część ogrodu.' }, // Nowe
     { url: fot3, category: 'team', alt: 'Doświadczony rehabilitant z naszego zespołu.' },
     { url: p6, category: 'interiors', alt: 'Eleganckie meble i staranne wykończenie pokoju.' },
     // { url: zdj2, category: 'garden', alt: 'Widok z lotu ptaka na zieloną okolicę Grzybowa.' },
     { url: p7, category: 'interiors', alt: 'Dwuosobowy pokój z oddzielnymi łóżkami.' },
+    { url: p17, category: 'garden', alt: 'Estetyczna aranżacja ogrodowa przed budynkiem.' }, // Nowe
     { url: fot4, category: 'team', alt: 'Koordynatorka zajęć i aktywności dla mieszkańców.' },
     { url: p8, category: 'interiors', alt: 'Stylowa aranżacja wnętrza pokoju dla seniora.' },
-    { url: domki, category: 'garden', alt: 'Widok na ogród i otoczenie Rezydencji Rubin.' },
+    // === ZMIANA KATEGORII: 'domki' ma teraz 'all', więc pojawi się tylko w "Wszystko" ===
+    { url: domki, category: 'all', alt: 'Widok na ogród i otoczenie Rezydencji Rubin.' }, 
     { url: p9, category: 'interiors', alt: 'Funkcjonalna szafa i miejsce do przechowywania w pokoju.' },
     { url: p10, category: 'interiors', alt: 'Jasne, dobrze oświetlone wnętrze z dużym oknem.' },
     { url: p11, category: 'interiors', alt: 'Detal wykończenia pokoju - komfort i estetyka.' },
@@ -109,6 +121,7 @@ export default function Gallery({ language, id }: GalleryProps) {
     }
   };
 
+  // === ZMIANA: Dodano logikę blokowania scrollowania ===
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (lightboxIndex === null) return;
@@ -117,8 +130,18 @@ export default function Gallery({ language, id }: GalleryProps) {
       if (e.key === 'Escape') setLightboxIndex(null);
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex]);
+
+    // Logika do blokowania przewijania strony
+    if (lightboxIndex !== null) {
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Funkcja cleanup - zawsze przywraca scrollowanie
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
+    };
+  }, [lightboxIndex]); // Zależność jest poprawna
 
   // === NOWOŚĆ: Logika do obsługi swipe na mobile ===
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -209,9 +232,10 @@ export default function Gallery({ language, id }: GalleryProps) {
             <X size={40} />
           </button>
 
+          {/* === ZMIANA: Usunięto 'hidden lg:block' aby strzałki były widoczne na mobile === */}
           <button 
             onClick={showPrevImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors hidden lg:block z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors z-10"
           >
             <ChevronLeft size={40} />
           </button>
@@ -223,9 +247,10 @@ export default function Gallery({ language, id }: GalleryProps) {
             onClick={(e) => e.stopPropagation()}
           />
           
+          {/* === ZMIANA: Usunięto 'hidden lg:block' aby strzałki były widoczne na mobile === */}
           <button 
             onClick={showNextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors hidden lg:block z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/40 text-white transition-colors z-10"
           >
             <ChevronRight size={40} />
           </button>

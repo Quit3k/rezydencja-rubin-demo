@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 // Importowanie zdjęć z folderu assets
 import zdj1 from '../assets/zdj1.jpeg';
 import personel from '../assets/personel.png';
-import zdj2 from '../assets/zdj2.jpg';
+import zdj2 from '../assets/zdj2.png';
 import ogrod from '../assets/ogrod.png';
 import domki from '../assets/domki.png';
 

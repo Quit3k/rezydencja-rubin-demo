@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// 1. Dodajemy importy 'useEffect' i naszego nowego komponentu
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
@@ -10,30 +11,62 @@ import Footer from './components/Footer';
 import InfoBar from './components/InfoBar';
 import SocialBar from './components/SocialBar';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+// Nasz nowy komponent popupu
+import CookiePopup from './components/CookiePopup';
+
+// 2. Definiujemy typy dla statusu zgody
+type ConsentStatus = 'pending' | 'accepted' | 'closed';
 
 function App() {
   const [language, setLanguage] = useState<'pl' | 'de'>('pl');
   const [showPrivacy, setShowPrivacy] = useState(false);
 
-  // Funkcja, która pokazuje politykę i przewija stronę na górę
+  // === 3. POCZĄTEK NOWEJ LOGIKI DLA POPUPU ===
+  const [consentStatus, setConsentStatus] = useState<ConsentStatus>('pending');
+
+  // Przy pierwszym ładowaniu aplikacji, sprawdzamy co jest w localStorage
+  useEffect(() => {
+    const storedConsent = localStorage.getItem('rubinConsent');
+    console.log("Odczytany stan z localStorage:", storedConsent);
+    if (storedConsent === 'accepted' || storedConsent === 'closed') {
+      setConsentStatus(storedConsent);
+    }
+  }, []); // Pusta tablica [] oznacza, że ten kod uruchomi się tylko raz
+
+  // Funkcja, którą wywoła popup po kliknięciu "Zgoda"
+  const handleAcceptConsent = () => {
+    setConsentStatus('accepted');
+    localStorage.setItem('rubinConsent', 'accepted');
+  };
+
+  // Funkcja, którą wywoła popup po kliknięciu "X"
+  const handleCloseConsent = () => {
+    setConsentStatus('closed');
+    localStorage.setItem('rubinConsent', 'closed');
+  };
+  
+  // Funkcja, którą przekażemy do Contact.tsx, aby mógł ponownie pokazać popup
+  const handleShowConsent = () => {
+    setConsentStatus('pending');
+  };
+  // === KONIEC NOWEJ LOGIKI ===
+
+
+  // Ta funkcja pozostaje bez zmian - jest idealna
   const handleShowPrivacy = () => {
     setShowPrivacy(true);
     window.scrollTo(0, 0);
   };
 
-  // Funkcja, która obsługuje całą nawigację - bez zmian, jest idealna
+  // Ta funkcja pozostaje bez zmian - jest idealna
   const handleNavigate = (sectionId: string) => {
-    // Jeśli ID to 'hero', po prostu przewiń na samą górę okna
     if (sectionId === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Jeśli jesteśmy w polityce, zamknij ją
       if (showPrivacy) {
         setShowPrivacy(false);
       }
-      return; // Zakończ funkcję
+      return;
     }
-
-    // Twoja istniejąca logika dla pozostałych sekcji
     if (showPrivacy) {
       setShowPrivacy(false);
       setTimeout(() => {
@@ -46,6 +79,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
+      
+      {/* 4. DODAJEMY RENDEROWANIE POPUPU */}
+      {/* Pokaż popup tylko jeśli status to 'pending' I jeśli nie oglądamy akurat polityki prywatności */}
+      {consentStatus === 'pending' && !showPrivacy && (
+        <CookiePopup
+          language={language}
+          onAccept={handleAcceptConsent}
+          onClose={handleCloseConsent}
+          onShowPrivacyPolicy={handleShowPrivacy}
+        />
+      )}
+
       <Header 
         language={language} 
         onLanguageChange={setLanguage}
@@ -60,8 +105,6 @@ function App() {
           />
         ) : (
           <>
-            {/* --- POPRAWKA: Dodane ID do sekcji --- */}
-            {/* Teraz nawigacja wie, gdzie ma przewijać */}
             <Hero id="hero" language={language} />
             <InfoBar language={language} />
             <WhyUs id="why-us" language={language} />
@@ -70,10 +113,16 @@ function App() {
             <About id="about" language={language} />
             <Gallery id="gallery" language={language} />
             <InfoBar language={language} />
+            
+            {/* 5. MODYFIKUJEMY PROPSY DLA <Contact /> */}
             <Contact 
               id="contact"
               language={language} 
-              onShowPrivacyPolicy={handleShowPrivacy} 
+              onShowPrivacyPolicy={handleShowPrivacy}
+              // Przekazujemy aktualny stan zgody
+              consentStatus={consentStatus}
+              // Przekazujemy funkcję do ponownego pokazania popupa
+              onShowConsent={handleShowConsent}
             />
           </>
         )}
