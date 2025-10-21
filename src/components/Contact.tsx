@@ -95,7 +95,7 @@ export default function Contact({ language, id, onShowPrivacyPolicy, consentStat
   const contactDetails = [
     { icon: MapPin, title: content.contact.address, lines: ["Bluszczowa 9", "78-100 Grzybowo"] },
     { icon: Phone, title: content.contact.phone, lines: ["+48 539 701 891"], href: "tel:+48539701891" },
-    { icon: Mail, title: content.contact.email, lines: ["kontakt@domseniora-grzybowo.pl"], href: "mailto:kontakt@domseniora-grzybowo.pl" },
+    { icon: Mail, title: content.contact.email, lines: ["kontakt@domopiekirubin.pl"], href: "mailto:kontakt@domopiekirubin.pl" },
     { icon: Clock, title: content.contact.hours, lines: [content.contact.hoursValue] },
   ];
 

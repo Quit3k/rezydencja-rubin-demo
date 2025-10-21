@@ -33,7 +33,7 @@ export default function PrivacyPolicyPage({ language, onNavigateHome }: PrivacyP
         { title: '§3 Prawa Użytkownika', items: [
             'Użytkownikowi przysługują prawa związane z przetwarzaniem jego danych osobowych, w tym: prawo dostępu do danych, prawo do ich sprostowania, usunięcia, ograniczenia przetwarzania, prawo do wniesienia sprzeciwu, prawo do przenoszenia danych oraz prawo do wniesienia skargi do organu nadzorczego (Prezesa Urzędu Ochrony Danych Osobowych).',
             'Jeżeli przetwarzanie danych odbywa się na podstawie zgody, Użytkownik ma prawo do jej cofnięcia w dowolnym momencie.',
-            'W celu realizacji swoich praw Użytkownik powinien skierować żądanie na adres e-mail: <strong>kontakt@domseniora-grzybowo.pl</strong>.',
+            'W celu realizacji swoich praw Użytkownik powinien skierować żądanie na adres e-mail: <strong>kontakt@domopiekirubin.pl</strong>.',
         ]},
         { title: '§4 Pliki Cookies', items: [
             'Podczas korzystania z Serwisu, automatycznie zbierane są dane takie jak adres IP, typ przeglądarki, czy system operacyjny. Dane te mogą być zbierane przez pliki cookies („ciasteczka”).',
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage({ language, onNavigateHome }: PrivacyP
         ]},
         { title: '§5 Postanowienia końcowe', items: [
             'W niniejszym dokumencie mogą nastąpić zmiany. Wszelkie zmiany będą komunikowane Użytkownikom niezwłocznie w sposób widoczny i zrozumiały.',
-            'Wszelkie pytania lub uwagi dotyczące Polityki prywatności prosimy kierować na adres e-mail: <strong>kontakt@domseniora-grzybowo.pl</strong>.',
+            'Wszelkie pytania lub uwagi dotyczące Polityki prywatności prosimy kierować na adres e-mail: <strong>kontakt@domopiekirubin.pl</strong>.',
         ]},
       ]
     },
@@ -71,7 +71,7 @@ export default function PrivacyPolicyPage({ language, onNavigateHome }: PrivacyP
         { title: '§3 Rechte des Nutzers', items: [
             'Der Nutzer hat das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch, Datenübertragbarkeit und das Recht, eine Beschwerde bei der Aufsichtsbehörde einzulegen.',
             'Basiert die Verarbeitung auf einer Einwilligung, kann diese jederzeit widerrufen werden.',
-            'Zur Ausübung seiner Rechte sollte der Nutzer eine Anfrage an <strong>kontakt@domseniora-grzybowo.pl</strong> senden.',
+            'Zur Ausübung seiner Rechte sollte der Nutzer eine Anfrage an <strong>kontakt@domopiekirubin.pl</strong> senden.',
         ]},
         { title: '§4 Cookies', items: [
             'Während der Nutzung des Services werden automatisch Daten wie IP-Adresse, Browsertyp usw. durch Cookies erfasst.',
@@ -80,7 +80,7 @@ export default function PrivacyPolicyPage({ language, onNavigateHome }: PrivacyP
         ]},
         { title: '§5 Schlussbestimmungen', items: [
             'Dieses Dokument kann Änderungen unterliegen. Alle Änderungen werden den Nutzern unverzüglich mitgeteilt.',
-            'Fragen zur Datenschutzrichtlinie richten Sie bitte an <strong>kontakt@domseniora-grzybowo.pl</strong>.',
+            'Fragen zur Datenschutzrichtlinie richten Sie bitte an <strong>kontakt@domopiekirubin.pl</strong>.',
         ]},
       ]
     }
