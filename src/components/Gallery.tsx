@@ -21,6 +21,8 @@ import p9 from '../assets/p9.jpg';
 import p10 from '../assets/p10.jpg';
 import p11 from '../assets/p11.jpg';
 import p12 from '../assets/p12.jpg';
+// NOWY IMPORT ZDJĘCIA KORYTARZ.png
+import Korytarz from '../assets/Korytarz.png';
 
 // === DODANE NOWE ZDJĘCIA OGRODU ===
 import p13 from '../assets/p13.jpg';
@@ -29,7 +31,7 @@ import p16 from '../assets/p16.jpg';
 import p17 from '../assets/p17.jpg';
 
 // Istniejące zdjęcia, które zostają
-import Dom from '../assets/Dom1.png';
+import Dom from '../assets/Dom1.jpg';
 import ogrod from '../assets/ogrod.png';
 import zdj1 from '../assets/zdj1.jpeg';
 // import zdj2 from '../assets/zdj2.jpg';
@@ -69,9 +71,10 @@ export default function Gallery({ language, id }: GalleryProps) {
         { id: 'team' as FilterType, label: 'UNSER TEAM' },
       ];
 
-  // === ZMIANA: Dodano nowe zdjęcia (p13, p15, p16, p17) i zmieniono kategorię 'domki' ===
+  // === ZMIANA: Zmieniono kategorię dla Dom na 'interiors' oraz dodano Korytarz ===
   const allImages = [
-    { url: Dom, category: 'garden', alt: 'Elegancka, biała willa Rezydencji Rubin z podjazdem.' },
+    // ZMIANA KATEGORII: Dom1.jpg zmienione na 'interiors'
+    { url: Dom, category: 'interiors', alt: language === 'pl' ? 'Elegancka, biała willa Rezydencji Rubin z podjazdem.' : 'Elegante, weiße Villa der Residenz Rubin mit Auffahrt.' },
     { url: p1, category: 'interiors', alt: 'Przestronny pokój dwuosobowy z drewnianymi meblami.' },
     { url: fot1, category: 'team', alt: 'Portret profesjonalnego członka zespołu Rezydencji Rubin.' },
     { url: p13, category: 'garden', alt: 'Zadbany ogród z alejkami spacerowymi.' }, // Nowe
@@ -94,6 +97,8 @@ export default function Gallery({ language, id }: GalleryProps) {
     { url: p8, category: 'interiors', alt: 'Stylowa aranżacja wnętrza pokoju dla seniora.' },
     // === ZMIANA KATEGORII: 'domki' ma teraz 'all', więc pojawi się tylko w "Wszystko" ===
     { url: domki, category: 'all', alt: 'Widok na ogród i otoczenie Rezydencji Rubin.' }, 
+    // NOWE ZDJĘCIE: Korytarz.png dodane do 'interiors'
+    { url: Korytarz, category: 'interiors', alt: language === 'pl' ? 'Jasny i przestronny korytarz w rezydencji.' : 'Heller und geräumiger Flur in der Residenz.' },
     { url: p9, category: 'interiors', alt: 'Funkcjonalna szafa i miejsce do przechowywania w pokoju.' },
     { url: p10, category: 'interiors', alt: 'Jasne, dobrze oświetlone wnętrze z dużym oknem.' },
     { url: p11, category: 'interiors', alt: 'Detal wykończenia pokoju - komfort i estetyka.' },

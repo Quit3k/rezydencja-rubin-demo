@@ -1,5 +1,5 @@
 import { ArrowRight, Camera } from 'lucide-react';
-import domImage from '../assets/Dom.jpg';
+import domImage from '../assets/Dom.png';
 
 // KROK 1: Dodajemy opcjonalne 'id' do interfejsu propsów
 interface HeroProps {

@@ -31,14 +31,14 @@ export default function WhyUs({ language, id }: WhyUsProps) {
     {
       icon: Heart,
       title: 'PROFESJONALNA OPIEKA, NA KTÓREJ MOŻESZ POLEGAĆ',
-      description: 'Zespół wykwalifikowanych pielęgniarek i opiekunów jest dostępny 24/7. Zapewniamy stały dostęp do lekarza internisty i rehabilitantów, gwarantując zdrowie i dobre samopoczucie mieszkańców.',
+      description: 'Zespół wykwalifikowanych pielęgniarek i opiekunów jest dostępny 24/7. Zapewniamy stały dostęp do lekarza internisty i zespołu terapeutów, gwarantując zdrowie i dobre samopoczucie mieszkańców.',
       image: personel,
       altText: 'Uśmiechnięta seniorka pod profesjonalną i troskliwą opieką pielęgniarki w domu opieki Rubin.',
     },
     {
       icon: MapPin,
       title: 'LOKALIZACJA, KTÓRA LECZY DUSZĘ',
-      description: 'Położenie w nadmorskim Grzybowie to nie tylko piękny widok. To dostęp do czystego powietrza, kojącego szumu fal i urokliwych terenów spacerowych, które sprzyjają regeneracji i wyciszeniu.',
+      description: 'Położenie w nadmorskim Grzybowie to nie tylko piękny widok. To stały dostęp do czystego, bogatego w jod powietrza, kojącego szumu fal i urokliwych terenów leśnych idealnych na spacery i ścieżki zdrowia. Oferujemy zdrowie i spokój w otoczeniu Bałtyckiego Krajobrazu.',
       image: zdj2,
       altText: 'Widok z lotu ptaka na zielone, nadmorskie tereny Grzybowa, lokalizację Rezydencji Rubin.',
     },

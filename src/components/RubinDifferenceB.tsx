@@ -14,16 +14,21 @@ export default function RubinDifferenceA({ language, id }: RubinDifferenceAProps
     senior: {
       title: 'Dla Seniorów',
       altText: 'Jasny i przestronny dwuosobowy pokój w Rezydencji Rubin z drewnianymi meblami i widokiem na zieleń.',
-      description: 'Nasza rezydencja oferuje komfortowe pokoje 1-, 2- i 3-osobowe z prywatnymi łazienkami, zaprojektowane bez barier architektonicznych dla pełnej wygody. Gwarantujemy najwyższy standard życia, profesjonalną opiekę dostępną całą dobę oraz dostęp do lekarzy i rehabilitantów, aby każdy dzień był pełen spokoju i poczucia bezpieczeństwa.',
+      description: 'Nasza rezydencja oferuje komfortowe pokoje 1-, 2- i 3-osobowe z prywatnymi łazienkami, zaprojektowane bez barier architektonicznych dla pełnej wygody. Gwarantujemy najwyższy standard życia, profesjonalną opiekę dostępną całą dobę oraz stały dostęp do lekarza internisty i fizjoterapeutów, aby każdy dzień był pełen spokoju i poczucia bezpieczeństwa.',
       features: [
         'Pokoje 1-, 2- i 3-osobowe z łazienkami',
         'Budynek bez barier architektonicznych',
         'System przywoławczy w każdym pokoju',
         'Całodobowa opieka pielęgniarska',
-        'Dostęp do lekarza i rehabilitantów',
+        'Dostęp do lekarza i terapeutów',
         'Zróżnicowane zajęcia aktywizujące',
         'Winda ułatwiająca poruszanie',
         'Elastyczne pobyty (krótkie i długie)',
+        // NOWE PUNKTY:
+        'Indywidualna praca z terapeutą',
+        'Jadłospis skonstruowany pod okiem dietetyka',
+        'Zajęcia pod okiem instruktorów',
+        'Kameralny ośrodek z ogrodem',
       ]
     },
     cta: 'Zadzwoń i zarezerwuj już dziś!'
@@ -42,6 +47,11 @@ export default function RubinDifferenceA({ language, id }: RubinDifferenceAProps
         'Vielfältige Aktivierungsangebote',
         'Aufzug für einfache Bewegung',
         'Flexible Aufenthalte (kurz und lang)',
+        // NOWE PUNKTY (PRZETŁUMACZONE):
+        'Individuelle Arbeit mit einem Therapeuten', // Indywidualna praca z terapeutą
+        'Speiseplan, erstellt unter Aufsicht eines Ernährungsberaters', // Jadłospis skonstruowany pod okiem dietetyka
+        'Kurse unter Aufsicht von Instruktoren', // Zajęcia pod okiem instruktorów
+        'Intimes Zentrum mit Garten', // Kameralny ośrodek z ogrodem
       ]
     },
     cta: 'Rufen Sie an und buchen Sie noch heute!'
@@ -54,13 +64,15 @@ export default function RubinDifferenceA({ language, id }: RubinDifferenceAProps
 
   const FeatureCard = ({ image, title, description, features, ctaText, altText }: { image: string, title: string, description: string, features: string[], ctaText: string, altText: string }) => (
     <div className="bg-stone-50 rounded-2xl shadow-lg overflow-hidden flex flex-col w-full max-w-4xl">
-      <img src={image} alt={altText} className="w-full h-72 object-cover" />
+      {/* ZMIANA WYSOKOŚCI: h-72 na mobile, h-80 na desktopie (72 * 1.1 ≈ 80) */}
+      <img src={image} alt={altText} className="w-full h-72 md:h-80 object-cover" />
       <div className="p-8 md:p-12 flex-grow flex flex-col">
         <h3 className="text-3xl font-serif text-center font-bold text-slate-800 mb-4">{title}</h3>
         <p className="text-slate-600 leading-relaxed text-center mb-10 flex-grow">{description}</p>
         
         <div className="flex justify-center">
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          {/* Dostosowanie do większej liczby punktów - używamy 2 kolumn od mobile w górę, żeby utrzymać kompaktowy wygląd. */}
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
             {features.map((feature, index) => (
               <li key={index} className="flex items-center">
                 <Check className="h-5 w-5 text-amber-700 mr-3 flex-shrink-0" />
@@ -88,6 +100,7 @@ export default function RubinDifferenceA({ language, id }: RubinDifferenceAProps
     <section id={id} className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <h2 className="text-4xl lg:text-5xl font-serif font-bold text-center text-slate-800 mb-16">
+          {/* Dodano bezpieczne sprawdzanie dla part3, które występuje tylko w DE */}
           {content.title.part1}<span className="text-amber-700">{content.title.part2}</span>{content.title.part3}
         </h2>
 

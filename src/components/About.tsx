@@ -21,7 +21,7 @@ export default function About({ language, id }: AboutProps) {
     philosophyTitle: 'NASZA FILOZOFIA: DOM, NIE INSTYTUCJA',
     mission: {
       startText: 'Rezydencja Rubin narodziła się z potrzeby serca – by stworzyć miejsce, które przeczy stereotypom o domach opieki. Fundamentem naszej pracy są wartości:',
-      values: ['Empatia', 'Szacunek', 'Godność'],
+      values: ['Empatia', 'Szacunek', 'Jakość'],
       endText: 'Dzięki nim nie jesteśmy placówką, a prawdziwym domem – rodzinną przystanią, gdzie każdy mieszkaniec jest traktowany z najwyższą troską, a jego potrzeby są zawsze na pierwszym miejscu.'
     },
     // KROK 4: Zaktualizowana tablica 'team'
@@ -36,7 +36,7 @@ export default function About({ language, id }: AboutProps) {
     philosophyTitle: 'UNSERE PHILOSOPHIE: EIN ZUHAUSE, KEINE INSTITUTION',
     mission: {
       startText: 'Die Rubin Residenz wurde aus dem Herzen geboren, um einen Ort zu schaffen, der Stereotypen widerspricht. Die Grundlage unserer Arbeit sind Werte:',
-      values: ['Empathie', 'Respekt', 'Würde'],
+      values: ['Empathie', 'Respekt', 'Qualität'],
       endText: 'Dank ihnen sind wir keine Einrichtung, sondern ein echtes Zuhause – ein Familienhafen, in dem jeder Bewohner mit größter Sorgfalt behandelt wird und seine Bedürfnisse immer an erster Stelle stehen.'
     },
     // KROK 4: Zaktualizowana tablica 'team' w drugim języku
